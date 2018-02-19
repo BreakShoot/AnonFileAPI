@@ -15,7 +15,7 @@ ___
 ```c#
 using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
 {
-      Console.WriteLine(afwAnonFileWrapper.getDirectDownloadLinkFromLink("https://anonfile.com/N411B9d1bf/badstuff.txt"));
+      Console.WriteLine(afwAnonFileWrapper.GetDirectDownloadLinkFromLink("https://anonfile.com/N411B9d1bf/badstuff.txt"));
 }
 Console.ReadKey();
 ```
@@ -27,13 +27,13 @@ using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
       AnonFile afAnonFile = afwAnonFileWrapper.UploadFile(@"C:\\something.exe");
       if (afAnonFile.isGoodResponse())
       {
-          Console.WriteLine("Full URL: " + afAnonFile.getFullURL());
-          Console.WriteLine("Short URL: " + afAnonFile.getShortURL());
-          Console.WriteLine("Bytes: " + afAnonFile.getAmountOfBytes());
+          Console.WriteLine("Full URL: " + afAnonFile.GetFullURL());
+          Console.WriteLine("Short URL: " + afAnonFile.GetShortURL());
+          Console.WriteLine("Bytes: " + afAnonFile.GetAmountOfBytes());
       }
       else
       {
-          Console.WriteLine("Exception Message: " + afAnonFile.getErrorCode());
+          Console.WriteLine("Exception Message: " + afAnonFile.GetErrorCode());
       }
 }
 Console.ReadKey();
