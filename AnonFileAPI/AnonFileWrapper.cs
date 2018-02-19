@@ -14,10 +14,10 @@ namespace AnonFileAPI
     {
         private WebClient client         = null;
         private string DirectDownloadURL = null;
+        
         /// <summary>
         ///     Initializes new WebClient.
         /// </summary>
-
         public AnonFileWrapper()
         {
             client = new WebClient();
