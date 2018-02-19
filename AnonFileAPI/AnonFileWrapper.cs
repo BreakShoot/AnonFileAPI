@@ -30,7 +30,17 @@ namespace AnonFileAPI
         /// <param name="downloadLocation"> The specified path with file and extension </param>
         public void DownloadFile(string fileURL, string downloadLocation)
         {
-           client.DownloadFile(getDirectDownloadLinkFromLink(fileURL), downloadLocation);
+           client.DownloadFile(GetDirectDownloadLinkFromLink(fileURL), downloadLocation);
+        }
+
+        /// <summary>
+        ///     Downloads the file to the specified path. 
+        /// </summary>
+        /// <param name="fileURL"> The URL of the file wanted. </param>
+        /// <param name="downloadLocation"> The specified path with file and extension </param>
+        public void DownloadFileAsync(string fileURL, string downloadLocation)
+        {
+            client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileURL)), downloadLocation);
         }
 
         /// <summary>
@@ -40,10 +50,10 @@ namespace AnonFileAPI
         public AnonFile UploadFile(string fileLocation)
         {
             if (!File.Exists(fileLocation))
-                throw new Exception("Anon File Uploader ERROR: File does not exist!");
+                throw new Exception($"ERROR: Invalid path detected at {fileLocation}");
             
             byte[] uploadValue = client.UploadFile(@"https://anonfile.com/api/upload", fileLocation);
-            return parseOutput(Encoding.Default.GetString(uploadValue));
+            return ParseOutput(Encoding.Default.GetString(uploadValue));
         }
 
         /// <summary>
@@ -51,7 +61,7 @@ namespace AnonFileAPI
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        private void unsafeGetDirectDownloadLinkFromLink(string htmlDocument)
+        private void UnsafeGetDirectDownloadLinkFromLink(string htmlDocument)
         {
             using (WebBrowser browser = new WebBrowser())
             {
@@ -69,10 +79,10 @@ namespace AnonFileAPI
         /// </summary>
         /// <param name="link"></param>
         /// <returns></returns>
-        public string getDirectDownloadLinkFromLink(string link)
+        public string GetDirectDownloadLinkFromLink(string link)
         {
             string HTMLDoc = client.DownloadString(link);
-            Thread threadSafe = new Thread(() => unsafeGetDirectDownloadLinkFromLink(HTMLDoc));
+            Thread threadSafe = new Thread(() => UnsafeGetDirectDownloadLinkFromLink(HTMLDoc));
             threadSafe.SetApartmentState(ApartmentState.STA);
             threadSafe.Start();
             threadSafe.Join();
@@ -84,7 +94,7 @@ namespace AnonFileAPI
         ///     Parses the JSON reply and returns AnonFiles with set properties. 
         /// </summary>
         /// <param name="input"></param>
-        private AnonFile parseOutput(string input)
+        private AnonFile ParseOutput(string input)
         {
             var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(input), new System.Xml.XmlDictionaryReaderQuotas());
             var root = XElement.Load(jsonReader);

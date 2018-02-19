@@ -46,7 +46,7 @@
         ///     Return the full URL (basically URL + file name and extension).
         /// </summary>
         /// <returns> Full URL. </returns>
-        public string getFullURL()
+        public string GetFullURL()
         {
             return urlfull;
         }
@@ -55,7 +55,7 @@
         ///     Return the short URL.
         /// </summary>
         /// <returns> Short URL. </returns>
-        public string getShortURL()
+        public string GetShortURL()
         {
             return urlshort;
         }
@@ -64,7 +64,7 @@
         ///     Return the amount of bytes in the file. If file upload failed, will return 0.
         /// </summary>
         /// <returns> Amount of Bytes. </returns>
-        public uint getAmountOfBytes()
+        public uint GetAmountOfBytes()
         {
             return size;
         }
@@ -73,7 +73,7 @@
         ///     Return the status of the upload.
         /// </summary>
         /// <returns> Status. </returns>
-        public bool isGoodResponse()
+        public bool IsGoodResponse()
         {
             return status;
         }
@@ -82,7 +82,7 @@
         ///     Return the entire raw JSON.
         /// </summary>
         /// <returns> raw JSON. </returns>
-        public string getFullResponse()
+        public string GetFullResponse()
         {
             return response;
         }
@@ -91,7 +91,7 @@
         ///     Return the error message. If there is no error, this will return null.
         /// </summary>
         /// <returns> Error Code. </returns>
-        public string getErrorCode()
+        public string GetErrorMessage()
         {
             return errorCode;
         }
@@ -100,7 +100,7 @@
         ///     Return the error type. If there is no error, this will return null.
         /// </summary>
         /// <returns> Error Type. </returns>
-        public string getErrorType()
+        public string GetErrorType()
         {
             return errorType;
         }
