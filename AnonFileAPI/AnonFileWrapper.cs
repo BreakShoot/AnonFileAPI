@@ -14,10 +14,10 @@ namespace AnonFileAPI
     {
         private WebClient client         = null;
         private string DirectDownloadURL = null;
+
         /// <summary>
         ///     Initializes new WebClient.
         /// </summary>
-
         public AnonFileWrapper()
         {
             client = new WebClient();
@@ -81,7 +81,7 @@ namespace AnonFileAPI
 
 
         /// <summary>
-        ///     This is the only private method. It parses the JSON reply and returns AnonFiles with set properties. 
+        ///     Parses the JSON reply and returns AnonFiles with set properties. 
         /// </summary>
         /// <param name="input"></param>
         private AnonFile parseOutput(string input)
