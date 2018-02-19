@@ -12,11 +12,11 @@ namespace AnonFileAPI
 {
     public class AnonFileWrapper : IDisposable
     {
-        private WebClient client         = null;
-        private string DirectDownloadURL = null;
+        private readonly WebClient client   = null;
+        private string DirectDownloadURL    = null;
 
         /// <summary>
-        ///     Initializes new WebClient.
+        ///     Initializes new WebClient.          
         /// </summary>
         public AnonFileWrapper()
         {
@@ -26,21 +26,21 @@ namespace AnonFileAPI
         /// <summary>
         ///     Downloads the file to the specified path. 
         /// </summary>
-        /// <param name="fileURL"> The URL of the file wanted. </param>
+        /// <param name="fileUrl"> The URL of the file wanted. </param>
         /// <param name="downloadLocation"> The specified path with file and extension </param>
-        public void DownloadFile(string fileURL, string downloadLocation)
+        public void DownloadFile(string fileUrl, string downloadLocation)
         {
-           client.DownloadFile(GetDirectDownloadLinkFromLink(fileURL), downloadLocation);
+           client.DownloadFile(GetDirectDownloadLinkFromLink(fileUrl), downloadLocation);
         }
 
         /// <summary>
         ///     Downloads the file to the specified path. 
         /// </summary>
-        /// <param name="fileURL"> The URL of the file wanted. </param>
+        /// <param name="fileUrl"> The URL of the file wanted. </param>
         /// <param name="downloadLocation"> The specified path with file and extension </param>
-        public void DownloadFileAsync(string fileURL, string downloadLocation)
+        public void DownloadFileAsync(string fileUrl, string downloadLocation)
         {
-            client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileURL)), downloadLocation);
+            client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileUrl)), downloadLocation);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace AnonFileAPI
             if (!File.Exists(fileLocation))
                 throw new Exception($"ERROR: Invalid path detected at {fileLocation}");
             
-            byte[] uploadValue = client.UploadFile(@"https://anonfile.com/api/upload", fileLocation);
+            byte[] uploadValue = client.UploadFile("https://anonfile.com/api/upload", fileLocation);
             return ParseOutput(Encoding.Default.GetString(uploadValue));
         }
 
@@ -100,9 +100,10 @@ namespace AnonFileAPI
             bool status = Convert.ToBoolean(root.XPathSelectElement("//status").Value);
             if (!status)
             {
-                string errorCode = root.XPathSelectElement("//error/message").Value;
+                string errorMessage = root.XPathSelectElement("//error/message").Value;
                 string errorType = root.XPathSelectElement("//error/type").Value;
-                return new AnonFile(input, status, errorCode, errorType);
+                uint   errorCode = Convert.ToUInt32(root.XPathSelectElement("//error/code").Value);
+                return new AnonFile(input, status, errorMessage, errorCode, errorType);
             }
             else
             {
