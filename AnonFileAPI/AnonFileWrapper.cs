@@ -60,7 +60,6 @@ namespace AnonFileAPI
         ///     Sorts through the HTML document to find the direct download link (which has a randomly string inserted inside of it). NOT safe threading.
         /// </summary>
         /// <param name="htmlDocument"></param>
-        /// <returns></returns>
         private void UnsafeGetDirectDownloadLinkFromLink(string htmlDocument)
         {
             using (WebBrowser browser = new WebBrowser())
