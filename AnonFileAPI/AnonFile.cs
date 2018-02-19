@@ -29,7 +29,7 @@ namespace AnonFileAPI
         }
 
         /// <summary>
-        ///     Used to return a successful AnonFile. Should NOT be initialized by user but instead AnonFileWrapper.
+        ///     Used to return a successful AnonFile. Should NOT be initialized by user but instead AnonFileWrapper. 
         /// </summary>
         /// <param name="response"></param>
         /// <param name="status"></param>
