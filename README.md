@@ -3,10 +3,11 @@
 An unofficial C# API for interacting with https://anonfile.com/
 
 
-What can this do? 
+## Abilities 
   - Convert link to direct download link.
   - Upload files.
   - Download files.
+  - 100% standalone.
   
  
 # Code Examples:
