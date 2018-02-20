@@ -33,7 +33,7 @@ using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
       }
       else
       {
-          Console.WriteLine("Exception Message: " + afAnonFile.GetErrorCode());
+          Console.WriteLine("Exception Message: " + afAnonFile.GetErrorMessage());
       }
 }
 Console.ReadKey();
