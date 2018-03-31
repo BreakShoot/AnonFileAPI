@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -12,15 +12,14 @@ namespace AnonFileAPI
 {
     public class AnonFileWrapper : IDisposable
     {
-        private readonly WebClient client   = null;
-        private string DirectDownloadURL    = null;
+        private readonly WebClient _client   = null;
 
         /// <summary>
         ///     Initializes new WebClient.          
         /// </summary>
         public AnonFileWrapper()
         {
-            client = new WebClient();
+            _client = new WebClient();
         }
 
         /// <summary>
@@ -30,7 +29,7 @@ namespace AnonFileAPI
         /// <param name="downloadLocation"> The specified path with file and extension </param>
         public void DownloadFile(string fileUrl, string downloadLocation)
         {
-           client.DownloadFile(GetDirectDownloadLinkFromLink(fileUrl), downloadLocation);
+           _client.DownloadFile(GetDirectDownloadLinkFromLink(fileUrl), downloadLocation);
         }
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace AnonFileAPI
         /// <param name="downloadLocation"> The specified path with file and extension </param>
         public void DownloadFileAsync(string fileUrl, string downloadLocation)
         {
-            client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileUrl)), downloadLocation);
+            _client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileUrl)), downloadLocation);
         }
 
         /// <summary>
@@ -50,42 +49,44 @@ namespace AnonFileAPI
         public AnonFile UploadFile(string fileLocation)
         {
             if (!File.Exists(fileLocation))
-                throw new Exception($"ERROR: Invalid path detected at {fileLocation}");
-            
-            byte[] uploadValue = client.UploadFile("https://anonfile.com/api/upload", fileLocation);
-            return ParseOutput(Encoding.Default.GetString(uploadValue));
+                throw new AnonFileException($"Invalid file path at {fileLocation}");
+
+            return ParseOutput(Encoding.Default.GetString(
+                _client.UploadFile("https://anonfile.com/api/upload", fileLocation))
+            );
         }
 
         /// <summary>
-        ///     Sorts through the HTML document to find the direct download link (which has a randomly string inserted inside of it). NOT safe threading.
-        /// </summary>
-        /// <param name="htmlDocument"></param>
-        private void UnsafeGetDirectDownloadLinkFromLink(string htmlDocument)
-        {
-            using (WebBrowser browser = new WebBrowser())
-            {
-                browser.DocumentText = htmlDocument;
-                browser.ScriptErrorsSuppressed = true;
-                browser.Document.OpenNew(true);
-                browser.Document.Write(htmlDocument);
-                browser.Refresh();
-                DirectDownloadURL = browser.Document.GetElementById("download-url").GetAttribute("href");
-            }
-        }
-
-        /// <summary>
-        ///     Sorts through the link's HTML document to find the direct download link (which has a randomly string inserted inside of it).
+        /// Sorts through the link's HTML document to find the direct download link (which has a randomly string inserted inside of it).
+        /// The ApartmentState was set to STA due to some funky errors with WebBrowser.
         /// </summary>
         /// <param name="link"></param>
+        /// <param name="elementname"></param>
         /// <returns></returns>
-        public string GetDirectDownloadLinkFromLink(string link)
+        public string GetDirectDownloadLinkFromLink(string link, string elementname = "download-url")
         {
-            string HTMLDoc = client.DownloadString(link);
-            Thread threadSafe = new Thread(() => UnsafeGetDirectDownloadLinkFromLink(HTMLDoc));
-            threadSafe.SetApartmentState(ApartmentState.STA);
-            threadSafe.Start();
-            threadSafe.Join();
-            return DirectDownloadURL;
+            string htmlDoc = _client.DownloadString(link);
+            string directDownloadUrl = null;
+
+
+            //this is only done to set the apartment state to STA and due to the webbrowser throwing errors if it isn't!
+            Thread safeThread = new Thread(() =>
+            {
+                using (WebBrowser browser = new WebBrowser())
+                {
+                    browser.DocumentText = htmlDoc;
+                    browser.ScriptErrorsSuppressed = true;
+                    browser.Document.OpenNew(true);
+                    browser.Document.Write(htmlDoc);
+                    browser.Refresh();
+                    directDownloadUrl = browser.Document.GetElementById(elementname).GetAttribute("href");
+                }
+            }){ ApartmentState = ApartmentState.STA };
+
+            safeThread.Start();
+            safeThread.Join();
+
+            return directDownloadUrl ?? throw new AnonFileException("Failed to locate the direct download link! This could be because the website changed its element id for the download link, if so you can set the second paramater to the correct one!");
         }
 
 
@@ -97,19 +98,20 @@ namespace AnonFileAPI
         {
             var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(input), new System.Xml.XmlDictionaryReaderQuotas());
             var root = XElement.Load(jsonReader);
-            bool status = Convert.ToBoolean(root.XPathSelectElement("//status").Value);
+            bool status = Convert.ToBoolean(root.XPathSelectElement("//status")?.Value);
+
             if (!status)
             {
-                string errorMessage = root.XPathSelectElement("//error/message").Value;
-                string errorType = root.XPathSelectElement("//error/type").Value;
-                uint   errorCode = Convert.ToUInt32(root.XPathSelectElement("//error/code").Value);
+                string errorMessage = root.XPathSelectElement("//error/message")?.Value;
+                string errorType = root.XPathSelectElement("//error/type")?.Value;
+                uint   errorCode = Convert.ToUInt32(root.XPathSelectElement("//error/code")?.Value);
                 return new AnonFile(input, status, errorMessage, errorCode, errorType);
             }
             else
             {
-                string urlfull = root.XPathSelectElement("//url/full").Value;
-                string urlshort = root.XPathSelectElement("//url/short").Value;
-                uint size = Convert.ToUInt32(root.XPathSelectElement("//metadata/size/bytes").Value);
+                string urlfull = root.XPathSelectElement("//url/full")?.Value;
+                string urlshort = root.XPathSelectElement("//url/short")?.Value;
+                uint size = Convert.ToUInt32(root.XPathSelectElement("//metadata/size/bytes")?.Value);
                 return new AnonFile(input, status, urlfull, urlshort, size);
             }
         }
@@ -119,7 +121,7 @@ namespace AnonFileAPI
         /// </summary>
         public void Dispose()
         {
-            client.Dispose();
+            _client.Dispose();
         }
     }
 }
