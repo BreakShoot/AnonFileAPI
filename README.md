@@ -15,10 +15,8 @@ ___
 ## Convert to Direct Download Link
 ```c#
 using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
-{
       Console.WriteLine(afwAnonFileWrapper.GetDirectDownloadLinkFromLink("https://anonfile.com/N411B9d1bf/badstuff.txt"));
-}
-Console.ReadKey();
+
 ```
 
 ## Upload Files
@@ -37,7 +35,6 @@ using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
           Console.WriteLine("Exception Message: " + afAnonFile.GetErrorMessage());
       }
 }
-Console.ReadKey();
 ```
 
 ## Download Files
