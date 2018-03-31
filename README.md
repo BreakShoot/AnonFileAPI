@@ -26,7 +26,7 @@ Console.ReadKey();
 using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
 {
       AnonFile afAnonFile = afwAnonFileWrapper.UploadFile(@"C:\\something.exe");
-      if (afAnonFile.isGoodResponse())
+      if (afAnonFile.IsGoodResponse())
       {
           Console.WriteLine("Full URL: " + afAnonFile.GetFullURL());
           Console.WriteLine("Short URL: " + afAnonFile.GetShortURL());
