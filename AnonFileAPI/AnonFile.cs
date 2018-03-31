@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 
 namespace AnonFileAPI
 {
     public class AnonFile
     {
-        private string response     = null;
-        private bool status         = false;
-        private string urlfull      = null;
-        private string urlshort     = null;
-        private uint size           = 0;
-        private uint errorCode      = 0;
-        private string errorMessage = null;
-        private string errorType    = null;
+        private readonly string _response     = null;
+        private readonly bool _status         = false;
+        private readonly string _urlfull      = null;
+        private readonly string _urlshort     = null;
+        private readonly uint _size           = 0;
+        private readonly uint _errorCode      = 0;
+        private readonly string _errorMessage = null;
+        private readonly string _errorType    = null;
 
         public static class AnonExceptions
         {
@@ -38,11 +38,11 @@ namespace AnonFileAPI
         /// <param name="size"></param>
         public AnonFile(string response, bool status, string urlfull, string urlshort, uint size)
         {
-            this.response = response;
-            this.status = status;
-            this.urlfull = urlfull;
-            this.urlshort = urlshort;
-            this.size = size;
+            this._response = response;
+            this._status = status;
+            this._urlfull = urlfull;
+            this._urlshort = urlshort;
+            this._size = size;
         }
 
         /// <summary>
@@ -54,29 +54,29 @@ namespace AnonFileAPI
         /// <param name="errorType"></param>
         public AnonFile(string response, bool status, string errorMessage, uint errorCode, string errorType)
         {
-            this.response = response;
-            this.status = status;
-            this.errorCode = errorCode;
-            this.errorType = errorType;
-            this.errorMessage = errorMessage;
+            this._response = response;
+            this._status = status;
+            this._errorCode = errorCode;
+            this._errorType = errorType;
+            this._errorMessage = errorMessage;
         }
 
         /// <summary>
         ///     Return the full URL (basically URL + file name and extension).
         /// </summary>
         /// <returns> Full URL. </returns>
-        public string GetFullURL()
+        public string GetFullUrl()
         {
-            return urlfull;
+            return _urlfull;
         }
 
         /// <summary>
         ///     Return the short URL.
         /// </summary>
         /// <returns> Short URL. </returns>
-        public string GetShortURL()
+        public string GetShortUrl()
         {
-            return urlshort;
+            return _urlshort;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace AnonFileAPI
         /// <returns> Amount of Bytes. </returns>
         public uint GetAmountOfBytes()
         {
-            return size;
+            return _size;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace AnonFileAPI
         /// <returns> Status. </returns>
         public bool IsGoodResponse()
         {
-            return status;
+            return _status;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace AnonFileAPI
         /// <returns> raw JSON. </returns>
         public string GetFullResponse()
         {
-            return response;
+            return _response;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace AnonFileAPI
         /// <returns> Error Message. </returns>
         public string GetErrorMessage()
         {
-            return errorMessage;
+            return _errorMessage;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace AnonFileAPI
         /// <returns></returns>
         public uint GetErrorCode()
         {
-            return errorCode;
+            return _errorCode;
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace AnonFileAPI
         /// <returns> Error Type. </returns>
         public string GetErrorType()
         {
-            return errorType;
+            return _errorType;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace AnonFileAPI
         /// <returns> Raw JSON. </returns>
         public override string ToString()
         {
-            return response;
+            return _response;
         }
     }
 }
