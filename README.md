@@ -8,6 +8,7 @@ An unofficial C# API for interacting with https://anonfile.com/
   - Upload files.
   - Download files.
   - 100% standalone.
+  - Contains Exception Types
   
  
 # Code Examples:
@@ -21,19 +22,15 @@ using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
 
 ## Upload Files
 ```c#
-using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
+using (AnonFileWrapper anonFileWrapper = new AnonFileWrapper())
 {
-      AnonFile afAnonFile = afwAnonFileWrapper.UploadFile(@"C:\\something.exe");
-      if (afAnonFile.IsGoodResponse())
-      {
-          Console.WriteLine("Full URL: " + afAnonFile.GetFullURL());
-          Console.WriteLine("Short URL: " + afAnonFile.GetShortURL());
-          Console.WriteLine("Bytes: " + afAnonFile.GetAmountOfBytes());
-      }
-      else
-      {
-          Console.WriteLine("Exception Message: " + afAnonFile.GetErrorMessage());
-      }
+    AnonFile anonFile = anonFileWrapper.UploadFile($"C:\\Users\\username\\OneDrive\\Documents\\test\\example.txt");
+    Console.WriteLine("Error Code: {0}", anonFile.ErrorCode);
+    Console.WriteLine("Error Message: {0}", anonFile.ErrorMessage);
+    Console.WriteLine("Error Type: {0}", anonFile.ErrorType);
+    Console.WriteLine("Full URL: {0}", anonFile.FullUrl);
+    Console.WriteLine("Status: {0}", anonFile.Status);
+    Console.WriteLine("Download URL: {0}", anonFileWrapper.GetDirectDownloadLinkFromLink(anonFile.FullUrl));
 }
 ```
 
@@ -44,3 +41,13 @@ using (AnonFileWrapper afwAnonFileWrapper = new AnonFileWrapper())
       afwAnonFileWrapper.DownloadFile("https://anonfile.com/N411B9d1bf/badstuff.txt", @"C:\Users\Username\Downloads\badstuff.txt");
 }
 ```
+## Tell Types of Exceptions
+```c#
+using (AnonFileWrapper anonFileWrapper = new AnonFileWrapper())
+{
+      AnonFile anonFile = anonFileWrapper.UploadFile("C:\\Users\\username\\OneDrive\\Documents\\test\\example.txt");
+      if (anonFile.ErrorCode == AnonFile.AnonExceptions.ERROR_FILE_BANNED)
+          return;
+}
+```
+
