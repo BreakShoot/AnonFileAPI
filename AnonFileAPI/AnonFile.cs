@@ -4,14 +4,14 @@ namespace AnonFileAPI
 {
     public class AnonFile
     {
-        private readonly string _response     = null;
-        private readonly bool _status         = false;
-        private readonly string _urlfull      = null;
-        private readonly string _urlshort     = null;
-        private readonly uint _size           = 0;
-        private readonly uint _errorCode      = 0;
-        private readonly string _errorMessage = null;
-        private readonly string _errorType    = null;
+        public string Response { get; private set; }
+        public bool Status { get; private set; }
+        public string FullUrl { get; private set; }
+        public string ShortUrl { get; private set; }
+        public uint Size { get; private set; }
+        public uint ErrorCode { get; private set; }
+        public string ErrorMessage { get; private set; }
+        public string ErrorType { get; private set; }
 
         public static class AnonExceptions
         {
@@ -34,15 +34,15 @@ namespace AnonFileAPI
         /// <param name="response"></param>
         /// <param name="status"></param>
         /// <param name="urlfull"></param>
-        /// <param name="urlshort"></param>
+        /// <param name="shortUrl"></param>
         /// <param name="size"></param>
-        public AnonFile(string response, bool status, string urlfull, string urlshort, uint size)
+        public AnonFile(string response, bool status, string urlfull, string shortUrl, uint size)
         {
-            this._response = response;
-            this._status = status;
-            this._urlfull = urlfull;
-            this._urlshort = urlshort;
-            this._size = size;
+            this.Response = response;
+            this.Status = status;
+            this.FullUrl = urlfull;
+            this.ShortUrl = shortUrl;
+            this.Size = size;
         }
 
         /// <summary>
@@ -54,83 +54,91 @@ namespace AnonFileAPI
         /// <param name="errorType"></param>
         public AnonFile(string response, bool status, string errorMessage, uint errorCode, string errorType)
         {
-            this._response = response;
-            this._status = status;
-            this._errorCode = errorCode;
-            this._errorType = errorType;
-            this._errorMessage = errorMessage;
+            this.Response = response;
+            this.Status = status;
+            this.ErrorCode = errorCode;
+            this.ErrorType = errorType;
+            this.ErrorMessage = errorMessage;
         }
 
         /// <summary>
         ///     Return the full URL (basically URL + file name and extension).
         /// </summary>
         /// <returns> Full URL. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public string GetFullUrl()
         {
-            return _urlfull;
+            return FullUrl;
         }
 
         /// <summary>
         ///     Return the short URL.
         /// </summary>
         /// <returns> Short URL. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public string GetShortUrl()
         {
-            return _urlshort;
+            return ShortUrl;
         }
 
         /// <summary>
         ///     Return the amount of bytes in the file. If file upload failed, will return 0.
         /// </summary>
         /// <returns> Amount of Bytes. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public uint GetAmountOfBytes()
         {
-            return _size;
+            return Size;
         }
 
         /// <summary>
         ///     Return the status of the upload.
         /// </summary>
         /// <returns> Status. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public bool IsGoodResponse()
         {
-            return _status;
+            return Status;
         }
 
         /// <summary>
         ///     Return the entire raw JSON.
         /// </summary>
         /// <returns> raw JSON. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public string GetFullResponse()
         {
-            return _response;
+            return Response;
         }
 
         /// <summary>
         ///     Return the error message. If there is no error, this will return null.
         /// </summary>
         /// <returns> Error Message. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public string GetErrorMessage()
         {
-            return _errorMessage;
+            return ErrorMessage;
         }
 
         /// <summary>
         ///     Return the errorcode code. Is 0 if none.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public uint GetErrorCode()
         {
-            return _errorCode;
+            return ErrorCode;
         }
 
         /// <summary>
         ///     Return the error type. If there is no error, this will return null.
         /// </summary>
         /// <returns> Error Type. </returns>
+        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
         public string GetErrorType()
         {
-            return _errorType;
+            return ErrorType;
         }
 
         /// <summary>
@@ -139,7 +147,7 @@ namespace AnonFileAPI
         /// <returns> Raw JSON. </returns>
         public override string ToString()
         {
-            return _response;
+            return Response;
         }
     }
 }
