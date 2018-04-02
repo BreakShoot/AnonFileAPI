@@ -96,23 +96,26 @@ namespace AnonFileAPI
         /// <param name="input"></param>
         private AnonFile ParseOutput(string input)
         {
-            var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(input), new System.Xml.XmlDictionaryReaderQuotas());
-            var root = XElement.Load(jsonReader);
-            bool status = Convert.ToBoolean(root.XPathSelectElement("//status")?.Value);
+            using (var jsonReader = JsonReaderWriterFactory.CreateJsonReader(Encoding.UTF8.GetBytes(input),
+                new System.Xml.XmlDictionaryReaderQuotas()))
+            {
+                var root = XElement.Load(jsonReader);
+                bool status = Convert.ToBoolean(root.XPathSelectElement("//status")?.Value);
 
-            if (!status)
-            {
-                string errorMessage = root.XPathSelectElement("//error/message")?.Value;
-                string errorType = root.XPathSelectElement("//error/type")?.Value;
-                uint   errorCode = Convert.ToUInt32(root.XPathSelectElement("//error/code")?.Value);
-                return new AnonFile(input, status, errorMessage, errorCode, errorType);
-            }
-            else
-            {
-                string urlfull = root.XPathSelectElement("//url/full")?.Value;
-                string urlshort = root.XPathSelectElement("//url/short")?.Value;
-                uint size = Convert.ToUInt32(root.XPathSelectElement("//metadata/size/bytes")?.Value);
-                return new AnonFile(input, status, urlfull, urlshort, size);
+                if (!status)
+                {
+                    string errorMessage = root.XPathSelectElement("//error/message")?.Value;
+                    string errorType = root.XPathSelectElement("//error/type")?.Value;
+                    uint errorCode = Convert.ToUInt32(root.XPathSelectElement("//error/code")?.Value);
+                    return new AnonFile(input, status, errorMessage, errorCode, errorType);
+                }
+                else
+                {
+                    string urlfull = root.XPathSelectElement("//url/full")?.Value;
+                    string urlshort = root.XPathSelectElement("//url/short")?.Value;
+                    uint size = Convert.ToUInt32(root.XPathSelectElement("//metadata/size/bytes")?.Value);
+                    return new AnonFile(input, status, urlfull, urlshort, size);
+                }
             }
         }
 
