@@ -52,7 +52,7 @@ namespace AnonFileAPI
                 throw new AnonFileException($"Invalid file path at {fileLocation}");
 
             return ParseOutput(Encoding.Default.GetString(
-                _client.UploadFile("https://anonfile.com/api/upload", fileLocation))
+                _client.UploadFile("https://api.anonfile.com/upload", fileLocation))
             );
         }
 
