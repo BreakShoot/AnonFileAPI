@@ -1,18 +1,22 @@
 using System;
+using System.ComponentModel;
 using System.Text;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AnonFileAPI
 {
     public class AnonFileWrapper : IDisposable
     {
         private readonly WebClient _client   = null;
+        private bool _disposed = false;
 
         /// <summary>
         ///     Initializes new WebClient.          
@@ -26,7 +30,7 @@ namespace AnonFileAPI
         ///     Downloads the file to the specified path. 
         /// </summary>
         /// <param name="fileUrl"> The URL of the file wanted. </param>
-        /// <param name="downloadLocation"> The specified path with file and extension </param>
+        /// <param name="downloadLocation"> The specified path with file and extension. </param>
         public void DownloadFile(string fileUrl, string downloadLocation)
         {
            _client.DownloadFile(GetDirectDownloadLinkFromLink(fileUrl), downloadLocation);
@@ -36,10 +40,16 @@ namespace AnonFileAPI
         ///     Downloads the file to the specified path. 
         /// </summary>
         /// <param name="fileUrl"> The URL of the file wanted. </param>
-        /// <param name="downloadLocation"> The specified path with file and extension </param>
-        public void DownloadFileAsync(string fileUrl, string downloadLocation)
+        /// <param name="downloadLocation"> The specified path with file and extension. </param>
+        /// <param name="handler"> A progress changed handler that can monitor the progress of the download. </param>
+        public void DownloadFileAsync(string fileUrl, string downloadLocation, DownloadProgressChangedEventHandler handler = null)
         {
             _client.DownloadFileAsync(new Uri(GetDirectDownloadLinkFromLink(fileUrl)), downloadLocation);
+
+            if (handler != null)
+            {
+                _client.DownloadProgressChanged += handler;
+            }
         }
 
         /// <summary>
@@ -51,9 +61,42 @@ namespace AnonFileAPI
             if (!File.Exists(fileLocation))
                 throw new AnonFileException($"Invalid file path at {fileLocation}");
 
-            return ParseOutput(Encoding.Default.GetString(
-                _client.UploadFile("api.anonfile.com/upload", fileLocation))
-            );
+            byte[] response = _client.UploadFile("https://api.anonfile.com/upload", fileLocation);
+
+            return ParseOutput(Encoding.Default.GetString(response));
+        }
+
+        /// <summary>
+        ///     Checks if file exists and uploads file. This along with parsing the output of the JSON response.
+        /// </summary>
+        /// <param name="fileLocation"> The specified path to the file to be uploaded. </param>
+        /// <param name="handler"> A progress changed handler that can monitor the progress of the upload. </param>
+        public AnonFile UploadFileAsync(string fileLocation, UploadProgressChangedEventHandler handler)
+        {
+            string response = null;
+            AutoResetEvent waitHandle = new AutoResetEvent(false);
+
+            if (!File.Exists(fileLocation))
+                throw new AnonFileException($"Invalid file path at {fileLocation}");
+
+            _client.UploadFileAsync(new Uri("https://api.anonfile.com/upload"), fileLocation);
+
+            
+            if (handler != null)
+            {
+                _client.UploadProgressChanged += handler;
+            }
+
+            _client.UploadFileCompleted += (self, e) =>
+            {
+                waitHandle.Set();
+                response = Encoding.Default.GetString(e.Result);
+            };
+
+            waitHandle.WaitOne();
+            waitHandle.Dispose();
+
+            return response != null ? ParseOutput(response) : throw new AnonFileException("Failed to grab AnonFile's server response to the upload event!"); ;
         }
 
         /// <summary>
@@ -119,12 +162,29 @@ namespace AnonFileAPI
             }
         }
 
-        /// <summary>
-        ///     Dispose the webclient.
-        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _client.Dispose();
+                }
+
+                
+                this._disposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            _client.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~AnonFileWrapper()
+        {
+            Dispose(false);
         }
     }
 }
