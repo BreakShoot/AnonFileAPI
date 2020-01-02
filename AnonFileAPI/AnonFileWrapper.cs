@@ -1,15 +1,12 @@
 using System;
-using System.ComponentModel;
 using System.Text;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AnonFileAPI
 {
