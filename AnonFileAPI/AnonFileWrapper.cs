@@ -71,7 +71,7 @@ namespace AnonFileAPI
         /// </summary>
         /// <param name="fileLocation"> The specified path to the file to be uploaded. </param>
         /// <param name="handler"> A progress changed handler that can monitor the progress of the upload. </param>
-        public AnonFile UploadFileAsync(string fileLocation, UploadProgressChangedEventHandler handler)
+        public AnonFile UploadFileAsync(string fileLocation, UploadProgressChangedEventHandler handler = null)
         {
             string response = null;
             AutoResetEvent waitHandle = new AutoResetEvent(false);
