@@ -33,14 +33,14 @@ namespace AnonFileAPI
         /// </summary>
         /// <param name="response"></param>
         /// <param name="status"></param>
-        /// <param name="urlfull"></param>
+        /// <param name="fullurl"></param>
         /// <param name="shortUrl"></param>
         /// <param name="size"></param>
-        public AnonFile(string response, bool status, string urlfull, string shortUrl, uint size)
+        public AnonFile(string response, bool status, string fullurl, string shortUrl, uint size)
         {
             this.Response = response;
             this.Status = status;
-            this.FullUrl = urlfull;
+            this.FullUrl = fullurl;
             this.ShortUrl = shortUrl;
             this.Size = size;
         }
@@ -59,95 +59,6 @@ namespace AnonFileAPI
             this.ErrorCode = errorCode;
             this.ErrorType = errorType;
             this.ErrorMessage = errorMessage;
-        }
-
-        /// <summary>
-        ///     Return the full URL (basically URL + file name and extension).
-        /// </summary>
-        /// <returns> Full URL. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public string GetFullUrl()
-        {
-            return FullUrl;
-        }
-
-        /// <summary>
-        ///     Return the short URL.
-        /// </summary>
-        /// <returns> Short URL. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public string GetShortUrl()
-        {
-            return ShortUrl;
-        }
-
-        /// <summary>
-        ///     Return the amount of bytes in the file. If file upload failed, will return 0.
-        /// </summary>
-        /// <returns> Amount of Bytes. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public uint GetAmountOfBytes()
-        {
-            return Size;
-        }
-
-        /// <summary>
-        ///     Return the status of the upload.
-        /// </summary>
-        /// <returns> Status. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public bool IsGoodResponse()
-        {
-            return Status;
-        }
-
-        /// <summary>
-        ///     Return the entire raw JSON.
-        /// </summary>
-        /// <returns> raw JSON. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public string GetFullResponse()
-        {
-            return Response;
-        }
-
-        /// <summary>
-        ///     Return the error message. If there is no error, this will return null.
-        /// </summary>
-        /// <returns> Error Message. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public string GetErrorMessage()
-        {
-            return ErrorMessage;
-        }
-
-        /// <summary>
-        ///     Return the errorcode code. Is 0 if none.
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public uint GetErrorCode()
-        {
-            return ErrorCode;
-        }
-
-        /// <summary>
-        ///     Return the error type. If there is no error, this will return null.
-        /// </summary>
-        /// <returns> Error Type. </returns>
-        [Obsolete("Setters and Getters were seen as redudant, please consider using the properties!")]
-        public string GetErrorType()
-        {
-            return ErrorType;
-        }
-
-        /// <summary>
-        ///     Return the full raw JSON.
-        /// </summary>
-        /// <returns> Raw JSON. </returns>
-        public override string ToString()
-        {
-            return Response;
         }
     }
 }
